@@ -1,8 +1,17 @@
-function injectScript(src) {
-    const s = document.createElement('script');
-    s.src = chrome.runtime.getURL(src);
-    s.onload = () => s.remove();
-    (document.head || document.documentElement).append(s);
-}
+window.Worker = class Worker extends oldWorker {
+    constructor(twitchBlobUrl) {
+        super(twitchBlobUrl);
 
-injectScript("src/app.js");
+        this.addEventListener("message", (event) => {
+            const data = event.data;
+
+            if ((data.id == 1 || isVariantA) && data.type == 1) {
+                const newData = event.data;
+
+                newData.arg = [data.arg];
+
+                this.postMessage(newData);
+            }
+        });
+    }
+}
