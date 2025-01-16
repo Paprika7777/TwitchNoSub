@@ -14,21 +14,27 @@ document.head.appendChild = function (element) {
 const oldWorker = window.Worker;
 
 window.Worker = class Worker extends oldWorker {
-    constructor(twitchBlobUrl) {
-        super(twitchBlobUrl);
 
-        if (!isVariantA) {
-            this.addEventListener("message", (event) => {
-                const data = event.data;
+constructor(twitchBlobUrl) {
 
-                if (data.id == 1 && data.type == 1) {
-                    const newData = event.data;
+super(twitchBlobUrl);
 
-                    newData.arg = [data.arg];
+this.addEventListener("message", (event) => {
 
-                    this.postMessage(newData);
-                }
-            });
-        }
-    }
+const data = event.data;
+
+if ((data.id == 1 || isVariantA) && data.type == 1) {
+
+const newData = event.data;
+
+newData.arg = [data.arg];
+
+this.postMessage(newData);
+
+}
+
+});
+
+}
+
 }
